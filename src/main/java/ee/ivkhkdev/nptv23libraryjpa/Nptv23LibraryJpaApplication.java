@@ -63,10 +63,10 @@ public class Nptv23LibraryJpaApplication implements CommandLineRunner {
 					bookService.print();
 					break;
 				case 5:
-					authorService.delete();
+					authorService.changeAvailability();
 					break;
 				case 6:
-					bookService.delete();
+					bookService.changeAvailability();
 					break;
 				default:
 					System.out.println("Выберите задачу из списка!");

@@ -5,6 +5,6 @@ import java.util.List;
 public interface AppService<T> {
     boolean add();
     boolean update(T t);
-    boolean delete();
+    boolean changeAvailability();
     boolean print();
 }

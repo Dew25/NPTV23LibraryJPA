@@ -41,19 +41,15 @@ public class AuthorService implements AppService<Author> {
     }
 
     @Override
-    public boolean delete() {
-        Long authorId = authorHelper.remove(authorRepository.findAll());
+    public boolean changeAvailability() {
+        Long authorId = authorHelper.findIdEntityForChangeAvailability(authorRepository.findAll());
         Optional<Author> optionalAuthor = authorRepository.findById(authorId);
         if (optionalAuthor.isEmpty()) {
             return false;
         }
         Author author = optionalAuthor.get();
-        for(int i = 0; i<author.getBooks().size(); i++) {
-            Book book = author.getBooks().get(i);
-            book.getAuthors().remove(author);
-            bookRepository.save(book);
-        }
-        authorRepository.delete(author);
+        author.setAvailable(false);
+        authorRepository.save(author);
         return true;
     }
 

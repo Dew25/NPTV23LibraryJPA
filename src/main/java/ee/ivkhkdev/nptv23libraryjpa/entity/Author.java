@@ -14,6 +14,7 @@ public class Author {
     private String lastname;
     @ManyToMany(mappedBy = "authors")
     private List<Book> books;
+    private boolean available = true;
 
     public Author() {}
 
@@ -60,6 +61,14 @@ public class Author {
         this.books = books;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,11 +84,13 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Author{" +
-                "id=" + id +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", books=" + Arrays.toString(books.toArray()) +
-                '}';
+        final StringBuilder sb = new StringBuilder("Author{");
+        sb.append("id=").append(id);
+        sb.append(", firstname='").append(firstname).append('\'');
+        sb.append(", lastname='").append(lastname).append('\'');
+        sb.append(", books=").append(Arrays.toString(books.toArray()));
+        sb.append(", available=").append(available);
+        sb.append('}');
+        return sb.toString();
     }
 }

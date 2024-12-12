@@ -60,6 +60,7 @@ public class AuthorHelper implements AppHelper<Author> {
             System.out.println("---------- Список авторов --------");
             for(int i=0;i<authors.size();i++) {
                 Author author = authors.get(i);
+                if(!author.isAvailable()) continue;
                 System.out.printf("%d. %s %s%n",
                         author.getId(),
                         author.getFirstname(),
@@ -74,7 +75,7 @@ public class AuthorHelper implements AppHelper<Author> {
     }
 
     @Override
-    public Long remove(List<Author> authors) {
+    public Long findIdEntityForChangeAvailability(List<Author> authors) {
         this.printList(authors);
         System.out.println("Выберите номер автора для удаления: ");
         return (long) input.getInt();

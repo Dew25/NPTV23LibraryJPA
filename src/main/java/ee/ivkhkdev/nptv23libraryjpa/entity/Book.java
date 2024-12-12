@@ -12,17 +12,15 @@ public class Book {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-
-    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_authors",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private List<Author> authors = new ArrayList<>();
-
     private int publishedYear;
-
+    private boolean available = true;
     public Book() {
     }
 
@@ -69,6 +67,14 @@ public class Book {
         this.publishedYear = publishedYear;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,11 +90,13 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", authors=" + Arrays.toString(authors.toArray()) +
-                ", publishedYear=" + publishedYear +
-                '}';
+        final StringBuilder sb = new StringBuilder("Book{");
+        sb.append("id=").append(id);
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", authors=").append(Arrays.toString(authors.toArray()));
+        sb.append(", publishedYear=").append(publishedYear);
+        sb.append(", available=").append(available);
+        sb.append('}');
+        return sb.toString();
     }
 }

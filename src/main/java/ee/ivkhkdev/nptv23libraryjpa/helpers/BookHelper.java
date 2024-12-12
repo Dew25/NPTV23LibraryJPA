@@ -39,6 +39,7 @@ public class BookHelper implements AppHelper<Book> {
             System.out.println("---------- Список книг --------");
             for(int i=0;i<books.size();i++) {
                 Book book = books.get(i);
+                if(!book.isAvailable())continue;
                 StringBuilder sbBookAuthors = new StringBuilder();
                 for(int j=0;j<book.getAuthors().size();j++) {
                     sbBookAuthors.append(book.getAuthors().get(j).getFirstname())
@@ -61,7 +62,7 @@ public class BookHelper implements AppHelper<Book> {
     }
 
     @Override
-    public Long remove(List<Book> books) {
+    public Long findIdEntityForChangeAvailability(List<Book> books) {
         this.printList(books);
         System.out.print("Выберите номер книги для удаления: ");
         return (long) input.getInt();

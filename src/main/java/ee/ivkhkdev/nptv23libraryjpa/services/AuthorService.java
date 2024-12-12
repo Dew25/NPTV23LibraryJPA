@@ -5,13 +5,13 @@ import ee.ivkhkdev.nptv23libraryjpa.entity.Book;
 import ee.ivkhkdev.nptv23libraryjpa.helpers.AuthorHelper;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppHelper;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppService;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.AuthorRepository;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.BookRepository;
+import ee.ivkhkdev.nptv23libraryjpa.repository.AuthorRepository;
+import ee.ivkhkdev.nptv23libraryjpa.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Spliterator;
 
 @Service
 public class AuthorService implements AppService<Author> {
@@ -28,11 +28,16 @@ public class AuthorService implements AppService<Author> {
     @Override
     public boolean add() {
         Optional<Author> optionalAuthor = authorAppHelper.create();
-        if (optionalAuthor.isPresent()) {
-            authorRepository.save(optionalAuthor.get());
-            return true;
+        if (optionalAuthor.isEmpty()) {
+            return false;
         }
-        return false;
+        Author author = optionalAuthor.get();
+//        List<Book> books = bookRepository.findByAuthorsContaining(author);
+//        if(!books.isEmpty()){
+//            author.setBooks(books);
+//        }
+        authorRepository.save(author);
+        return true;
     }
 
     @Override

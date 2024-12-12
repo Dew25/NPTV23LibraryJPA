@@ -12,7 +12,7 @@ public class Author {
     private Long id;
     private String firstname;
     private String lastname;
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Book> books;
     private boolean available = true;
 

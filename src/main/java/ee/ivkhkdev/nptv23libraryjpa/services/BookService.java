@@ -5,12 +5,13 @@ import ee.ivkhkdev.nptv23libraryjpa.entity.Book;
 import ee.ivkhkdev.nptv23libraryjpa.helpers.AuthorHelper;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppHelper;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppService;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.AuthorRepository;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.BookRepository;
+import ee.ivkhkdev.nptv23libraryjpa.repository.AuthorRepository;
+import ee.ivkhkdev.nptv23libraryjpa.repository.BookRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +31,18 @@ public class BookService implements AppService<Book> {
             return false;
         }
         Book book = optionalBook.get();
-        List<Author> bookAuthors = authorHelper.listAuthorsForBook((List<Author>) authorRepository.findAll());
+        List<Long> listIdBooks = authorHelper.listAuthorsId((List<Author>) authorRepository.findAll());
+        List<Author> bookAuthors = new ArrayList<>();
+        for(Long id : listIdBooks) {
+            Optional<Author> optionalAuthor = authorRepository.findById(id);
+            optionalAuthor.ifPresent(bookAuthors::add);
+        }
         book.setAuthors(bookAuthors);
         Book savedBook = bookRepository.save(book);
-        for(Author author : bookAuthors) {
-            author.getBooks().add(savedBook);
-        }
-        authorRepository.saveAll(bookAuthors);
+//        for(Author author : bookAuthors) {
+//            author.getBooks().add(savedBook);
+//        }
+//        authorRepository.saveAll(bookAuthors);
         return true;
     }
 

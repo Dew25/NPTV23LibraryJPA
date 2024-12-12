@@ -1,8 +1,7 @@
 package ee.ivkhkdev.nptv23libraryjpa.helpers;
 import ee.ivkhkdev.nptv23libraryjpa.entity.Author;
-import ee.ivkhkdev.nptv23libraryjpa.entity.Book;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppHelper;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.AuthorRepository;
+import ee.ivkhkdev.nptv23libraryjpa.repository.AuthorRepository;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.Input;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,8 +14,6 @@ import java.util.Optional;
 public class AuthorHelper implements AppHelper<Author> {
     @Autowired
     private Input input;
-    @Autowired
-    private AuthorRepository authorRepository;
 
     @Override
     public Optional<Author> create() {
@@ -68,17 +65,16 @@ public class AuthorHelper implements AppHelper<Author> {
         return (long) input.getInt();
     }
 
-    public List<Author> listAuthorsForBook(List<Author> authors) {
+    public List<Long> listAuthorsId(List<Author> authors) {
         this.printList(authors);
         System.out.print("Сколько авторов у книги: ");
         int countAuthorsForBook = input.getInt();
-        List<Author> authorsForBook = new ArrayList<>();
+        List<Long>authorsId = new ArrayList<>();
         for(int i=0;i<countAuthorsForBook;i++) {
             System.out.printf("Выберите %d-го автора из списка: ",i+1);
-            Optional<Author> optionalAuthor = authorRepository.findById((long) input.getInt());
-            optionalAuthor.ifPresent(authorsForBook::add);
+            authorsId.add((long) input.getInt());
         }
-        return authorsForBook;
+        return authorsId;
     }
 }
 

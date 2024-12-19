@@ -1,18 +1,21 @@
 package ee.ivkhkdev.nptv23libraryjpa.helpers;
 
-import ee.ivkhkdev.nptv23libraryjpa.entity.Author;
 import ee.ivkhkdev.nptv23libraryjpa.entity.Book;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppHelper;
+import ee.ivkhkdev.nptv23libraryjpa.interfaces.BookHelper;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.Input;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-@Component
-public class BookHelper implements AppHelper<Book> {
 
-    @Autowired private Input input;
+@Component
+public class BookHelperImpl implements BookHelper {
+
+    private final Input input;
+
+    public BookHelperImpl(Input input) {
+        this.input = input;
+    }
 
     @Override
     public Optional<Book> create() {

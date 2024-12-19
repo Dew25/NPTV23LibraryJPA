@@ -14,18 +14,22 @@
  */
 package ee.ivkhkdev.nptv23libraryjpa.helpers;
 import ee.ivkhkdev.nptv23libraryjpa.entity.Author;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppHelper;
+import ee.ivkhkdev.nptv23libraryjpa.interfaces.AuthorHelper;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.Input;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-public class AuthorHelper implements AppHelper<Author> {
-    @Autowired
-    private Input input;
+public class AuthorHelperImpl implements AuthorHelper {
+
+    private final Input input;
+
+    public AuthorHelperImpl(Input input) {
+        this.input = input;
+    }
 
     @Override
     public Optional<Author> create() {
@@ -56,12 +60,16 @@ public class AuthorHelper implements AppHelper<Author> {
             }
             System.out.println("---------- Список авторов --------");
             for(int i=0;i<authors.size();i++) {
+                StringBuilder sbAvailableInfo = new StringBuilder();
                 Author author = authors.get(i);
-                if(!author.isAvailable()) continue;
-                System.out.printf("%d. %s %s%n",
+                if(!author.isAvailable()){
+                    sbAvailableInfo.append("(выключен)");
+                };
+                System.out.printf("%d. %s %s %s%n",
                         author.getId(),
                         author.getFirstname(),
-                        author.getLastname()
+                        author.getLastname(),
+                        sbAvailableInfo.toString()
                 );
             }
             return true;
@@ -74,18 +82,24 @@ public class AuthorHelper implements AppHelper<Author> {
     @Override
     public Long findIdEntityForChangeAvailability(List<Author> authors) {
         this.printList(authors);
-        System.out.println("Выберите номер автора для удаления: ");
+        System.out.println("Выберите номер автора: ");
         return (long) input.getInt();
     }
 
     public List<Long> listAuthorsId(List<Author> authors) {
-        this.printList(authors);
         System.out.print("Сколько авторов у книги: ");
         int countAuthorsForBook = input.getInt();
+        this.printList(authors);
         List<Long>authorsId = new ArrayList<>();
         for(int i=0;i<countAuthorsForBook;i++) {
-            System.out.printf("Выберите %d-го автора из списка: ",i+1);
-            authorsId.add((long) input.getInt());
+            System.out.printf("Выберите автора (%d из %d: ",i+1,countAuthorsForBook);
+            int numberAuthor = input.getInt();
+            Author author = authors.get(numberAuthor-1);
+            if(!author.isAvailable()){ //при выборе выключенного автора возвращаем пустой список
+                System.out.printf("Книгу добавить невозможно!%nВыбран выключенный автор: %s %s%n",author.getFirstname(),author.getLastname());
+                return new ArrayList<>();
+            }
+            authorsId.add(author.getId());
         }
         return authorsId;
     }

@@ -1,25 +1,24 @@
 package ee.ivkhkdev.nptv23libraryjpa;
 
-import ee.ivkhkdev.nptv23libraryjpa.services.AuthorService;
+import ee.ivkhkdev.nptv23libraryjpa.services.AuthorServiceImpl;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.Input;
-import ee.ivkhkdev.nptv23libraryjpa.services.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import ee.ivkhkdev.nptv23libraryjpa.services.BookServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.transaction.TransactionProperties;
 
 @SpringBootApplication
 public class Nptv23LibraryJpaApplication implements CommandLineRunner {
 
-	@Autowired
-	private Input input;
-	@Autowired
-	private AuthorService authorService;
-	@Autowired
-	private BookService bookService;
-    @Autowired
-    private TransactionProperties transactionProperties;
+	private final Input input;
+	private final AuthorServiceImpl authorService;
+	private final BookServiceImpl bookService;
+
+	public Nptv23LibraryJpaApplication(Input input, BookServiceImpl bookService, AuthorServiceImpl authorService) {
+		this.input = input;
+		this.bookService = bookService;
+		this.authorService = authorService;
+	}
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -33,8 +32,8 @@ public class Nptv23LibraryJpaApplication implements CommandLineRunner {
 			System.out.println("2. Добавить книгу");
 			System.out.println("3. Список авторов");
 			System.out.println("4. Список книг");
-			System.out.println("5. Удалить автора");
-			System.out.println("6. Удалить книгу");
+			System.out.println("5. Изменить доступность автора");
+			System.out.println("6. Изменить доступность книги");
 
 			System.out.print("Введите номер задачи: ");
 			int task = Integer.parseInt(input.getString());

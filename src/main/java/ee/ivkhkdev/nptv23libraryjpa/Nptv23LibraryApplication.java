@@ -1,27 +1,27 @@
 package ee.ivkhkdev.nptv23libraryjpa;
 
-import ee.ivkhkdev.nptv23libraryjpa.services.AuthorServiceImpl;
+import ee.ivkhkdev.nptv23libraryjpa.interfaces.AuthorService;
+import ee.ivkhkdev.nptv23libraryjpa.interfaces.BookService;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.Input;
-import ee.ivkhkdev.nptv23libraryjpa.services.BookServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Nptv23LibraryJpaApplication implements CommandLineRunner {
+public class Nptv23LibraryApplication implements CommandLineRunner {
 
 	private final Input input;
-	private final AuthorServiceImpl authorService;
-	private final BookServiceImpl bookService;
+	private final AuthorService authorService;
+	private final BookService bookService;
 
-	public Nptv23LibraryJpaApplication(Input input, BookServiceImpl bookService, AuthorServiceImpl authorService) {
+	public Nptv23LibraryApplication(Input input, BookService bookService, AuthorService authorService) {
 		this.input = input;
 		this.bookService = bookService;
 		this.authorService = authorService;
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
 		System.out.println("------ Библиотека группы NPTV23 с базой данных ------");
 		System.out.println("--------------------------------------");
 		boolean repeat=true;
@@ -46,14 +46,14 @@ public class Nptv23LibraryJpaApplication implements CommandLineRunner {
 						System.out.println("Автор добавлен");
 					}else{
 						System.out.println("Автора добавить не удалось");
-					};
+					}
 					break;
 				case 2:
 					if(bookService.add()){
 						System.out.println("Книга добавлена");
 					}else{
 						System.out.println("Книгу добавить не удалось");
-					};
+					}
 					break;
 				case 3:
 					authorService.print();
@@ -77,7 +77,7 @@ public class Nptv23LibraryJpaApplication implements CommandLineRunner {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(Nptv23LibraryJpaApplication.class, args);
+		SpringApplication.run(Nptv23LibraryApplication.class, args);
 	}
 
 }

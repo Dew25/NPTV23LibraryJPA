@@ -1,32 +1,25 @@
 package ee.ivkhkdev.nptv23libraryjpa.services;
 
 import ee.ivkhkdev.nptv23libraryjpa.entity.Author;
-import ee.ivkhkdev.nptv23libraryjpa.helpers.AuthorHelperImpl;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppService;
+import ee.ivkhkdev.nptv23libraryjpa.interfaces.AuthorHelper;
+import ee.ivkhkdev.nptv23libraryjpa.interfaces.AuthorService;
 import ee.ivkhkdev.nptv23libraryjpa.repository.AuthorRepository;
-import ee.ivkhkdev.nptv23libraryjpa.repository.BookRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
-public class AuthorServiceImpl implements AppService<Author> {
+public class AuthorServiceImpl implements AuthorService {
+    private final AuthorRepository authorRepository;
+    private final AuthorHelper authorHelper;
 
-    private AuthorHelperImpl authorAppHelper;
-    private AuthorRepository authorRepository;
-    private AuthorHelperImpl authorHelper;
-    private BookRepository bookRepository;
-
-    public AuthorServiceImpl(AuthorHelperImpl authorAppHelper, AuthorRepository authorRepository, AuthorHelperImpl authorHelper, BookRepository bookRepository) {
-        this.authorAppHelper = authorAppHelper;
+    public AuthorServiceImpl(AuthorHelper authorHelper, AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
         this.authorHelper = authorHelper;
-        this.bookRepository = bookRepository;
     }
 
     @Override
     public boolean add() {
-        Optional<Author> optionalAuthor = authorAppHelper.create();
+        Optional<Author> optionalAuthor = authorHelper.create();
         if (optionalAuthor.isEmpty()) {
             return false;
         }
@@ -36,7 +29,7 @@ public class AuthorServiceImpl implements AppService<Author> {
     }
 
     @Override
-    public boolean update(Author author) {
+    public boolean update(Author author){
         return false;
     }
     /*
@@ -52,11 +45,7 @@ public class AuthorServiceImpl implements AppService<Author> {
                 return false;
             }
             Author author = optionalAuthor.get();
-            if(author.isAvailable()){
-                author.setAvailable(false);
-            }else{
-                author.setAvailable(true);
-            }
+            author.setAvailable(!author.isAvailable());
             authorRepository.save(author);
             return true;
         }catch (Exception e) {
@@ -67,7 +56,7 @@ public class AuthorServiceImpl implements AppService<Author> {
 
     @Override
     public boolean print() {
-         return authorAppHelper.printList(authorRepository.findAll());
+         return authorHelper.printList(authorRepository.findAll());
     }
 
 

@@ -2,8 +2,8 @@ package ee.ivkhkdev.nptv23libraryjpa.services;
 
 import ee.ivkhkdev.nptv23libraryjpa.entity.Author;
 import ee.ivkhkdev.nptv23libraryjpa.entity.Book;
-import ee.ivkhkdev.nptv23libraryjpa.helpers.AuthorHelperImpl;
-import ee.ivkhkdev.nptv23libraryjpa.interfaces.AppHelper;
+import ee.ivkhkdev.nptv23libraryjpa.interfaces.AuthorHelper;
+import ee.ivkhkdev.nptv23libraryjpa.interfaces.BookHelper;
 import ee.ivkhkdev.nptv23libraryjpa.interfaces.BookService;
 import ee.ivkhkdev.nptv23libraryjpa.repository.AuthorRepository;
 import ee.ivkhkdev.nptv23libraryjpa.repository.BookRepository;
@@ -17,12 +17,12 @@ import java.util.Optional;
 @Service
 public class BookServiceImpl implements BookService {
 
-    private final AppHelper<Book> bookHelper;
-    private final AuthorHelperImpl authorHelper;
+    private final BookHelper bookHelper;
+    private final AuthorHelper authorHelper;
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
 
-    public BookServiceImpl(AppHelper<Book> bookHelper, AuthorHelperImpl authorHelper, BookRepository bookRepository, AuthorRepository authorRepository) {
+    public BookServiceImpl(BookHelper bookHelper, AuthorHelper authorHelper, BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookHelper = bookHelper;
         this.authorHelper = authorHelper;
         this.bookRepository = bookRepository;
@@ -38,7 +38,7 @@ public class BookServiceImpl implements BookService {
                 return false;
             }
             Book book = optionalBook.get();
-            List<Long> listIdAuthorsBook = authorHelper.listAuthorsId((List<Author>) authorRepository.findAll());
+            List<Long> listIdAuthorsBook = authorHelper.listAuthorsId(authorRepository.findAll());
             if(listIdAuthorsBook.isEmpty()) {return false;}
             List<Author> bookAuthors = new ArrayList<>();
             for(Long id : listIdAuthorsBook) {
@@ -49,7 +49,7 @@ public class BookServiceImpl implements BookService {
                 bookAuthors.add(author);
             }
             book.setAuthors(bookAuthors);
-            Book savedBook = bookRepository.save(book);
+            bookRepository.save(book);
             return true;
         }catch (Exception e) {
             return false;
@@ -70,11 +70,7 @@ public class BookServiceImpl implements BookService {
             return false;
         }
         Book book = optionalBook.get();
-        if(book.isAvailable()){
-            book.setAvailable(false);
-        }else{
-            book.setAvailable(true);
-        }
+        book.setAvailable(!book.isAvailable());
         bookRepository.save(book);
         return true;
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * В этом классе была зависимость от authorRepository, что приводило к смешению слоев приложения. (смотри код на 2 коммита раньше)
  * Слой представления (главный клас и классы реализующие AppHelper), это все классы, которые могут общаться с пользователем и
  * имеют возможность печатать что-то в консоле, а также считывать данные введенные пользователем.
@@ -86,6 +86,7 @@ public class AuthorHelperImpl implements AuthorHelper {
         return (long) input.getInt();
     }
 
+    @Override
     public List<Long> listAuthorsId(List<Author> authors) {
         System.out.print("Сколько авторов у книги: ");
         int countAuthorsForBook = input.getInt();
